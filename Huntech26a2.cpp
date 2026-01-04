@@ -1,6 +1,3 @@
-// You can edit anything you want in this file.
-// However, you need to implement all public Huntech functions, which are provided below as a template.
-
 #include "Huntech26a2.h"
 
 Huntech::Huntech(): squadsByIdTree(), squadsByAuraTree(), huntersHash() {}
@@ -34,7 +31,11 @@ StatusType Huntech::remove_squad(int squadId) {
         if(ptrToSquadShared == nullptr){
             return StatusType::FAILURE;
         }
-        squadsByAuraTree.remove((*ptrToSquadShared)->getRank());
+        std::shared_ptr<Squad> squad = *ptrToSquadShared;
+        if(squad->squadRoot != nullptr){
+            squad->squadRoot->squad = nullptr;
+        }
+        squadsByAuraTree.remove(squad->getRank());
         squadsByIdTree.remove(squadId);
         return StatusType::SUCCESS;
     }
@@ -65,7 +66,7 @@ StatusType Huntech::add_hunter(int hunterId,
             hunter->squad = squad.get();
         }else{
             hunter->fightsHadExtra = -squad->squadRoot->fightsHadExtra;
-            hunter->nenAbilityExtra = squad->squadNenAbility;
+            hunter->nenAbilityExtra = squad->squadNenAbility - squad->squadRoot->nenAbilityExtra;
             hunter->parent = squad->squadRoot;
         }
         squad->squadSize++;
@@ -224,6 +225,7 @@ StatusType Huntech::force_join(int forcingSquadId, int forcedSquadId) {
             forcingSquad->squadRoot->fightsHadExtra -= forcedSquad->squadRoot->fightsHadExtra;
             forcingSquad->squadRoot->nenAbilityExtra -= forcedSquad->squadRoot->nenAbilityExtra;
             forcingSquad->squadRoot = forcedSquad->squadRoot;
+            forcingSquad->squadRoot->squad = forcingSquad.get();
         }
         forcingSquad->squadAura += forcedSquad->squadAura;
         forcingSquad->squadNenAbility += forcedSquad->squadNenAbility;
