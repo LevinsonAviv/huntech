@@ -21,7 +21,7 @@ Value* find(int key);
 
 private:
 
-static const int arrSizes[24];
+static const int arrSizes[31];
 
 struct Node {
     /**
@@ -52,10 +52,12 @@ void resizeArr(int newSize);
 };
 
 template <class Value>
-const int HashTable<Value>::arrSizes[] = {3 ,7, 17, 37, 79, 163, 331, 673, 1361, 2729, 
+const int HashTable<Value>::arrSizes[] = {7, 17, 37, 79, 163, 331, 673, 1361, 2729, 
     5471, 10949, 21911, 43853, 87719, 175447, 350899, 
     701819, 1403641, 2807303, 5614657, 11229331, 22458671, 
-    44917381};
+    44917381, 89834777, 179669557, 359339171, 718678369, 
+    1437356741, 2874713497, 5749427029, 11498854069, 
+    22997708177};
 
 template <class Value>
 HashTable<Value>::HashTable(): arr(new Node* [arrSizes[0]]), arrSize(arrSizes[0]), currentSize(0), arrSizesIndex(0){
@@ -77,7 +79,7 @@ bool HashTable<Value>::insert(int key, const Value& value){
     if(find(key)){
         return false;
     }
-    if(currentSize + 1 >= arrSize){ // think if should resize before
+    if(currentSize >= 0.75 * arrSize){
         resizeArr(arrSizes[++arrSizesIndex]);
     }
     arr[hash(key)] = new Node{key, value};

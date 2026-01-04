@@ -12,14 +12,21 @@
 
 #ifndef HUNTECH26A2_H_
 #define HUNTECH26A2_H_
+#include <memory>
 #include "wet2util.h"
-
+#include "AVLTree.h"
+#include "HashTable.h"
+#include "Hunter.h"
+#include "Squad.h"
 
 class Huntech {
 private:
-    //
-    // Here you may add anything you need to implement your Huntech class
-    //
+
+    AVLTree<int, std::shared_ptr<Squad>> squadsByIdTree;
+    AVLTree<Squad::Rank, std::shared_ptr<Squad>> squadsByAuraTree;
+    HashTable<std::shared_ptr<Hunter>> huntersHash;
+
+    void compressPath(Hunter* hunter);
 
 public:
     // <DO-NOT-MODIFY> {
