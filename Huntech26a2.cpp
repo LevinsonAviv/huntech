@@ -34,8 +34,8 @@ StatusType Huntech::remove_squad(int squadId) {
         if(ptrToSquadShared == nullptr){
             return StatusType::FAILURE;
         }
-        squadsByIdTree.remove(squadId);
         squadsByAuraTree.remove((*ptrToSquadShared)->getRank());
+        squadsByIdTree.remove(squadId);
         return StatusType::SUCCESS;
     }
     catch(std::bad_alloc& e){
