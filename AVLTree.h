@@ -403,6 +403,9 @@ void AVLTree<Key, Value>::swapNodes(Node *root, Node *pivot, Node *pivotParent){
     int pivotHeight = pivot->height;
     pivot->height = root->height;
     root->height = pivotHeight;
+    int pivotSize = pivot->size;
+    pivot->size = root->size;
+    root->size = pivotSize;
 }
 
 template <class Key, class Value>
