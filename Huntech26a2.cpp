@@ -182,6 +182,9 @@ output_t<NenAbility> Huntech::get_partial_nen_ability(int hunterId) {
         }
         std::shared_ptr<Hunter> hunter = *ptrToHunterShared;
         compressPath(hunter.get());
+        if((hunter->parent == nullptr && hunter->squad == nullptr) || (hunter->parent != nullptr && hunter->parent->squad == nullptr)){
+            return output_t<NenAbility>(StatusType::FAILURE);
+        }
         return hunter->nenAbility + hunter->nenAbilityExtra + ((hunter->parent != nullptr) ? hunter->parent->nenAbilityExtra : NenAbility::zero());
     }
     catch(std::bad_alloc& e){
@@ -208,6 +211,8 @@ StatusType Huntech::force_join(int forcingSquadId, int forcedSquadId) {
             return StatusType::FAILURE;
         }
         if(forcedSquad->squadSize == 0){
+            squadsByIdTree.remove(forcedSquad->squadId);
+            squadsByAuraTree.remove(forcedSquad->getRank());
             return StatusType::SUCCESS;
         }
         squadsByIdTree.remove(forcedSquad->squadId);
